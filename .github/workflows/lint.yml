@@ -1,0 +1,48 @@
+name: Lint and Format Check
+
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+
+    - name: Install lint tools
+      run: |
+        pip install flake8 black pylint mypy
+        sudo apt-get install graphviz  # For AST visualization checks
+
+    - name: Run Black (code formatting)
+      run: |
+        black --check --diff src/ tests/
+
+    - name: Run Flake8 (basic linting)
+      run: |
+        flake8 src/ tests/ --count --show-source --statistics \
+          --max-complexity=10 \
+          --ignore=E203,W503  # Black-compatible settings
+
+    - name: Run Pylint (in-depth analysis)
+      run: |
+        pylint src/ --disable=missing-docstring,too-few-public-methods \
+          --enable=similarities,duplicate-code
+
+    - name: Run Mypy (static typing)
+      run: |
+        mypy src/ --ignore-missing-imports \
+          --disallow-untyped-defs \
+          --warn-return-any

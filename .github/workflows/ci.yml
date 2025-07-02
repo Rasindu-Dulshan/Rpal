@@ -2,6 +2,10 @@ name: RPAL CI Pipeline
 
 on: [push, pull_request]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -25,11 +29,3 @@ jobs:
     - name: Upload coverage
       uses: codecov/codecov-action@v3
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-python@v4
-    - run: pip install flake8 black
-    - run: flake8 src/ --count --show-source --statistics
-    - run: black --check src/ tests/
