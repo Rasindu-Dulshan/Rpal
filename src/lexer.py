@@ -61,18 +61,19 @@ class Lexer:
                 self._advance()
                 continue
 
-            # Handle comments
+            # Handle inline comments
             if current_char == '/' and self._peek() == '/':
                 self._handle_comment()
                 continue
 
             # Handle strings
+            # only handle sigle quoted string
             if current_char == "'":
                 self._handle_string()
                 continue
 
             # Handle identifiers
-            if current_char.isalpha():
+            if current_char.isalpha() or current_char == '_':
                 self._handle_identifier()
                 continue
 
@@ -87,8 +88,9 @@ class Lexer:
                 continue
 
             # Handle operators
+            # removed _ from list
             if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '^', '_', '[',
+                                '=', '~', '|', '$', '!', '#', '%', '^', '[',
                                 ']', '{', '}', '"', '`', '?'}:
                 self._handle_operator()
                 continue
@@ -220,8 +222,9 @@ class Lexer:
         # Handle multi-character operators (like '>=', '<=', '==', etc.)
         while self.position < len(self.source_code):
             current_char = self.source_code[self.position]
+            # removed _ from list
             if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '^', '_', '[',
+                                '=', '~', '|', '$', '!', '#', '%', '^', '[',
                                 ']', '{', '}', '"', '`', '?'}:
                 value += current_char
                 self._advance()

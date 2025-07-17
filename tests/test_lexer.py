@@ -4,14 +4,14 @@ from src.lexer import Lexer, Token, TokenType
 
 class TestLexer(unittest.TestCase):
     def test_identifiers(self):
-        lexer = Lexer("x y_z abc123 _invalid")
+        lexer = Lexer("x y_z abc123 _abc")
         tokens = lexer.tokenize()
 
         expected = [
             (TokenType.IDENTIFIER, "x"),
             (TokenType.IDENTIFIER, "y_z"),
             (TokenType.IDENTIFIER, "abc123"),
-            (TokenType.IDENTIFIER, "_invalid"),
+            (TokenType.IDENTIFIER, "_abc"),
             (TokenType.EOF, "")
         ]
 
