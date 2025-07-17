@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+venv/
+pyvenv.cfg
+
+# IDE
+.vscode/
+
+# Testing
+.golden/  # if these are generated test files
+.pytest_cache/
+
+# System
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
