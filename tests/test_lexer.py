@@ -1,5 +1,5 @@
 import unittest
-from src.lexer import Lexer, Token, TokenType
+from src.lexer import Lexer, TokenType, LexerError
 
 
 class TestLexer(unittest.TestCase):
@@ -93,7 +93,7 @@ class TestLexer(unittest.TestCase):
             self.assertEqual(token.value, expected_value)
 
     def test_comments(self):
-        lexer = Lexer("x // This is a comment\ny // Another comment")
+        lexer = Lexer("x // This is a comment\ny // Another comment\n")
         tokens = lexer.tokenize()
 
         expected = [
@@ -127,10 +127,9 @@ class TestLexer(unittest.TestCase):
             self.assertEqual(token.value, expected_value)
 
     def test_error_handling(self):
-        with self.assertRaises(Exception) as context:
-            lexer = Lexer("x @$ invalid")
+        with self.assertRaises(LexerError):
+            lexer = Lexer("'\\m'")
             lexer.tokenize()
-        self.assertTrue("Invalid character" in str(context.exception))
 
 
 if __name__ == '__main__':

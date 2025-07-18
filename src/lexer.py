@@ -73,7 +73,8 @@ class Lexer:
                 continue
 
             # Handle identifiers
-            if current_char.isalpha() or current_char == '_':
+            # _abc this is invalid identifier should always start with a letter
+            if current_char.isalpha():
                 self._handle_identifier()
                 continue
 
@@ -88,9 +89,8 @@ class Lexer:
                 continue
 
             # Handle operators
-            # removed _ from list
             if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '^', '[',
+                                '=', '~', '|', '$', '!', '#', '%', '_', '^', '[',
                                 ']', '{', '}', '"', '`', '?'}:
                 self._handle_operator()
                 continue
@@ -141,6 +141,7 @@ class Lexer:
                 self._advance()
                 next_char = self.source_code[self.position] if self.position < len(
                     self.source_code) else None
+                # \\t \\n \\' likewise(in python we use \t \n \')
                 if next_char in {'t', 'n', '\\', "'"}:
                     value += '\\' + next_char
                     self._advance()
@@ -222,9 +223,8 @@ class Lexer:
         # Handle multi-character operators (like '>=', '<=', '==', etc.)
         while self.position < len(self.source_code):
             current_char = self.source_code[self.position]
-            # removed _ from list
             if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '^', '[',
+                                '=', '~', '|', '$', '!', '#', '%', '_', '^', '[',
                                 ']', '{', '}', '"', '`', '?'}:
                 value += current_char
                 self._advance()
