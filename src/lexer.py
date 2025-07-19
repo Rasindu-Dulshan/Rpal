@@ -50,19 +50,19 @@ class Lexer:
             current_char = self.source_code[self.position]
 
             # Skip whitespace (but track position)
-            if current_char in ' \t':
+            if current_char in " \t":
                 self._advance()
                 continue
 
             # Handle newlines
-            if current_char == '\n':
+            if current_char == "\n":
                 self.line += 1
                 self.column = 1
                 self._advance()
                 continue
 
             # Handle inline comments
-            if current_char == '/' and self._peek() == '/':
+            if current_char == "/" and self._peek() == "/":
                 self._handle_comment()
                 continue
 
@@ -84,23 +84,49 @@ class Lexer:
                 continue
 
             # Handle punctuation
-            if current_char in '(),;':
+            if current_char in "(),;":
                 self._handle_punctuation(current_char)
                 continue
 
             # Handle operators
-            if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '_', '^', '[',
-                                ']', '{', '}', '"', '`', '?'}:
+            if current_char in {
+                "+",
+                "-",
+                "*",
+                "<",
+                ">",
+                "&",
+                ".",
+                "@",
+                "/",
+                ":",
+                "=",
+                "~",
+                "|",
+                "$",
+                "!",
+                "#",
+                "%",
+                "_",
+                "^",
+                "[",
+                "]",
+                "{",
+                "}",
+                '"',
+                "`",
+                "?",
+            }:
                 self._handle_operator()
                 continue
 
             # If we get here, it's an invalid character
             raise LexerError(
-                f"Invalid character '{current_char}'", self.line, self.column)
+                f"Invalid character '{current_char}'", self.line, self.column
+            )
 
         # Add EOF token
-        self.tokens.append(Token(TokenType.EOF, '', self.line, self.column))
+        self.tokens.append(Token(TokenType.EOF, "", self.line, self.column))
         return self.tokens
 
     def _advance(self):
@@ -120,12 +146,14 @@ class Lexer:
         self._advance()  # Skip second /
 
         # Consume until end of line
-        while self.position < len(self.source_code) and self.source_code[self.position] != '\n':
+        while (
+            self.position < len(self.source_code)
+            and self.source_code[self.position] != "\n"
+        ):
             value += self.source_code[self.position]
             self._advance()
 
-        self.tokens.append(
-            Token(TokenType.COMMENT, value, start_line, start_column))
+        self.tokens.append(Token(TokenType.COMMENT, value, start_line, start_column))
 
     def _handle_string(self):
         start_line = self.line
@@ -137,17 +165,19 @@ class Lexer:
             current_char = self.source_code[self.position]
 
             # Handle escape sequences
-            if current_char == '\\':
+            if current_char == "\\":
                 self._advance()
-                next_char = self.source_code[self.position] if self.position < len(
-                    self.source_code) else None
+                next_char = (
+                    self.source_code[self.position]
+                    if self.position < len(self.source_code)
+                    else None
+                )
                 # \\t \\n \\' likewise(in python we use \t \n \')
-                if next_char in {'t', 'n', '\\', "'"}:
-                    value += '\\' + next_char
+                if next_char in {"t", "n", "\\", "'"}:
+                    value += "\\" + next_char
                     self._advance()
                 else:
-                    raise LexerError("Invalid escape sequence",
-                                     self.line, self.column)
+                    raise LexerError("Invalid escape sequence", self.line, self.column)
                 continue
 
             # Check for closing quote
@@ -155,7 +185,8 @@ class Lexer:
                 value += "'"
                 self._advance()
                 self.tokens.append(
-                    Token(TokenType.STRING, value, start_line, start_column))
+                    Token(TokenType.STRING, value, start_line, start_column)
+                )
                 return
 
             # Add regular characters
@@ -173,14 +204,13 @@ class Lexer:
 
         while self.position < len(self.source_code):
             current_char = self.source_code[self.position]
-            if current_char.isalnum() or current_char == '_':
+            if current_char.isalnum() or current_char == "_":
                 value += current_char
                 self._advance()
             else:
                 break
 
-        self.tokens.append(
-            Token(TokenType.IDENTIFIER, value, start_line, start_column))
+        self.tokens.append(Token(TokenType.IDENTIFIER, value, start_line, start_column))
 
     def _handle_integer(self):
         start_line = self.line
@@ -196,20 +226,18 @@ class Lexer:
             else:
                 break
 
-        self.tokens.append(
-            Token(TokenType.INTEGER, value, start_line, start_column))
+        self.tokens.append(Token(TokenType.INTEGER, value, start_line, start_column))
 
     def _handle_punctuation(self, char):
         token_type = {
-            '(': TokenType.LPAREN,
-            ')': TokenType.RPAREN,
-            ';': TokenType.SEMICOLON,
-            ',': TokenType.COMMA
+            "(": TokenType.LPAREN,
+            ")": TokenType.RPAREN,
+            ";": TokenType.SEMICOLON,
+            ",": TokenType.COMMA,
         }.get(char)
 
         if token_type is None:
-            raise LexerError(
-                f"Unexpected punctuation '{char}'", self.line, self.column)
+            raise LexerError(f"Unexpected punctuation '{char}'", self.line, self.column)
 
         self.tokens.append(Token(token_type, char, self.line, self.column))
         self._advance()
@@ -223,13 +251,37 @@ class Lexer:
         # Handle multi-character operators (like '>=', '<=', '==', etc.)
         while self.position < len(self.source_code):
             current_char = self.source_code[self.position]
-            if current_char in {'+', '-', '*', '<', '>', '&', '.', '@', '/', ':',
-                                '=', '~', '|', '$', '!', '#', '%', '_', '^', '[',
-                                ']', '{', '}', '"', '`', '?'}:
+            if current_char in {
+                "+",
+                "-",
+                "*",
+                "<",
+                ">",
+                "&",
+                ".",
+                "@",
+                "/",
+                ":",
+                "=",
+                "~",
+                "|",
+                "$",
+                "!",
+                "#",
+                "%",
+                "_",
+                "^",
+                "[",
+                "]",
+                "{",
+                "}",
+                '"',
+                "`",
+                "?",
+            }:
                 value += current_char
                 self._advance()
             else:
                 break
 
-        self.tokens.append(
-            Token(TokenType.OPERATOR, value, start_line, start_column))
+        self.tokens.append(Token(TokenType.OPERATOR, value, start_line, start_column))

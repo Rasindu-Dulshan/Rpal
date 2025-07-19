@@ -12,7 +12,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.IDENTIFIER, "y_z"),
             (TokenType.IDENTIFIER, "abc123"),
             (TokenType.IDENTIFIER, "Abc"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -28,7 +28,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.INTEGER, "123"),
             (TokenType.INTEGER, "456789"),
             (TokenType.INTEGER, "0"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -44,7 +44,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.STRING, "'hello'"),
             (TokenType.STRING, "'escaped \\' quote'"),
             (TokenType.STRING, "'new\\nline'"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -67,7 +67,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.OPERATOR, "!="),
             (TokenType.OPERATOR, "&&"),
             (TokenType.OPERATOR, "||"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -84,7 +84,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.RPAREN, ")"),
             (TokenType.SEMICOLON, ";"),
             (TokenType.COMMA, ","),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -101,7 +101,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.COMMENT, "// This is a comment"),
             (TokenType.IDENTIFIER, "y"),
             (TokenType.COMMENT, "// Another comment"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -118,7 +118,7 @@ class TestLexer(unittest.TestCase):
             (TokenType.IDENTIFIER, "y"),
             (TokenType.IDENTIFIER, "z"),
             (TokenType.IDENTIFIER, "w"),
-            (TokenType.EOF, "")
+            (TokenType.EOF, ""),
         ]
 
         self.assertEqual(len(tokens), len(expected))
@@ -132,5 +132,5 @@ class TestLexer(unittest.TestCase):
             lexer.tokenize()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
