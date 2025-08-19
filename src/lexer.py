@@ -164,19 +164,30 @@ class Lexer:
             current_char = self.source_code[self.position]
 
             # Handle escape sequences
+            # check current char is blackslash not double backslash
+            # in python "abc\\" means abc\ (string)
             if current_char == "\\":
-                self._advance()
-                next_char = (
-                    self.source_code[self.position]
-                    if self.position < len(self.source_code)
-                    else None
-                )
-                # \\t \\n \\' likewise(in python we use \t \n \')
-                if next_char in {"t", "n", "\\", "'"}:
-                    value += "\\" + next_char
-                    self._advance()
+                escape_start_col = self.column
+                self._advance()  # Skip the backslash
+
+                if self.position >= len(self.source_code):
+                    raise LexerError(
+                        "Unterminated escape sequence", self.line, escape_start_col
+                    )
+
+                next_char = self.source_code[self.position]
+                escape_map = {"t": "\t", "n": "\n", "\\": "\\", "'": "'"}
+
+                if next_char in escape_map:
+                    # Add the actual escaped character
+                    value += escape_map[next_char]
+                    self._advance()  # Skip the escaped character
                 else:
-                    raise LexerError("Invalid escape sequence", self.line, self.column)
+                    raise LexerError(
+                        f"Invalid escape sequence '\\{next_char}'",
+                        self.line,
+                        escape_start_col,
+                    )
                 continue
 
             # Check for closing quote
